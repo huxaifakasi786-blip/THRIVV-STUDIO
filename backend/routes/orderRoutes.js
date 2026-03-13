@@ -83,4 +83,8 @@ router.put('/:id/status', protect, async (req, res) => {
             res.status(404).json({ message: 'Order not found' });
         }
     } catch (error) {
-   
+        res.status(400).json({ message: error.message });
+    }
+});
+
+export default router;

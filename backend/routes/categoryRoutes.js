@@ -62,4 +62,11 @@ router.delete('/:id', protect, async (req, res) => {
         if (category) {
             res.json({ message: 'Category removed' });
         } else {
-          
+            res.status(404).json({ message: 'Category not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+export default router;

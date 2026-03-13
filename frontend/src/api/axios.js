@@ -23,4 +23,4 @@ API.interceptors.response.use(
     }
 );
 
-export defaul
+export default API;

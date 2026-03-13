@@ -92,4 +92,11 @@ router.delete('/:id', protect, async (req, res) => {
         if (product) {
             res.json({ message: 'Product removed' });
         } else {
-            r
+            res.status(404).json({ message: 'Product not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+export default router;

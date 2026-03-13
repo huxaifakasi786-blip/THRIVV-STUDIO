@@ -29,4 +29,7 @@ router.put('/', protect, async (req, res) => {
         res.json(settings);
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
-  
+    }
+});
+
+export default router;
