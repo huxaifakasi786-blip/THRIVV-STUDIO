@@ -1,0 +1,362 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==============================
+   CSS VARIABLES - THRIVV STUDIO
+   ============================== */
+:root {
+  --color-bg: #000000;
+  --color-surface: #0A0A0A;
+  --color-surface2: #111111;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-accent: #FF0000;
+  --color-accent-secondary: #AA0000;
+  --color-accent-red: #FF3B3B;
+  --font-heading: 'Oswald', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+}
+
+/* ==============================
+   BASE STYLES
+   ============================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ==============================
+   TYPOGRAPHY
+   ============================== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ==============================
+   SCROLLBAR
+   ============================== */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* ==============================
+   BUTTONS
+   ============================== */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-8 py-3 bg-white text-black font-black text-xs uppercase tracking-[0.3em] transition-all duration-300 hover:bg-[var(--color-accent)] hover:text-white;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-8 py-3 border border-white/30 text-white font-black text-xs uppercase tracking-[0.3em] transition-all duration-300 hover:bg-white hover:text-black;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-6 py-2 text-gray-400 font-bold text-xs uppercase tracking-widest transition-all hover:text-white;
+  }
+
+  .input-field {
+    @apply w-full bg-black border border-white/10 text-white px-4 py-3 text-sm focus:outline-none focus:border-white/40 transition-colors placeholder-gray-600;
+  }
+
+  .section-label {
+    @apply text-[10px] font-black uppercase tracking-[0.4em] text-gray-500;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-6xl font-black uppercase text-white;
+    font-family: var(--font-heading);
+  }
+
+  /* Admin form inputs */
+  .admin-input {
+    @apply w-full bg-black border border-gray-800 rounded px-4 py-3 text-white focus:outline-none focus:border-white/40 text-sm transition-colors placeholder-gray-600;
+  }
+}
+
+/* ==============================
+   GRAIN TEXTURE OVERLAY
+   ============================== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 150px 150px;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ==============================
+   ANNOUNCEMENT BAR
+   ============================== */
+.announcement-bar {
+  background: var(--color-accent);
+  color: white;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 8px 0;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.announcement-bar marquee {
+  display: inline-block;
+}
+
+/* ==============================
+   HERO SECTION
+   ============================== */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 12vw, 14rem);
+  font-weight: 700;
+  line-height: 0.85;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.hero-title .outline-text {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+  color: transparent;
+}
+
+/* ==============================
+   PRODUCT GRID - COLDRIP STYLE
+   ============================== */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.product-card-cell {
+  background: #000;
+}
+
+/* ==============================
+   CATEGORY GRID
+   ============================== */
+.category-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #111;
+}
+
+.category-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.category-card:hover img {
+  transform: scale(1.08);
+}
+
+.category-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 60%);
+  transition: background 0.3s;
+}
+
+.category-card:hover .category-card-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.2) 60%);
+}
+
+/* ==============================
+   RGB BORDER EFFECT
+   ============================== */
+.rgb-border {
+  position: relative;
+  z-index: 0;
+}
+
+.rgb-border::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -2px;
+  background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+  background-size: 300% 300%;
+  animation: rgbBorderAnim 3s linear infinite;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.rgb-border:hover::before {
+  opacity: 1;
+}
+
+@keyframes rgbBorderAnim {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ==============================
+   SLEEK RGB "POWERED BY KASI" TEXT
+   ============================== */
+.kasi-credit {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  position: relative;
+  display: inline-block;
+  cursor: default;
+  user-select: none;
+  background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rgbGradientFlow 4s linear infinite;
+  transition: transform 0.3s ease;
+}
+
+.kasi-credit:hover {
+  transform: scale(1.05);
+}
+
+@keyframes rgbGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ==============================
+   MARQUEE
+   ============================== */
+.marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marqueeScroll 20s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes marqueeScroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ==============================
+   LOADING SPINNER
+   ============================== */
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==============================
+   UTILITY
+   ============================== */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
