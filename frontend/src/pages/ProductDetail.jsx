@@ -4,6 +4,7 @@ import { ChevronRight, Minus, Plus, ShoppingCart, Star, Ruler, Check } from 'luc
 import { motion, AnimatePresence } from 'framer-motion';
 import useCartStore from '../store/cartStore';
 import useProductStore from '../store/productStore';
+import useSettingsStore from '../store/settingsStore';
 import SizeGuideModal from '../components/products/SizeGuideModal';
 import TiltCard from '../components/products/TiltCard';
 import SEO from '../components/common/SEO';
@@ -14,6 +15,11 @@ const ProductDetail = () => {
     const { id } = useParams();
     const addItem = useCartStore(state => state.addItem);
     const { getProductById, products, fetchProducts } = useProductStore();
+    const { settings, fetchSettings } = useSettingsStore();
+
+    useEffect(() => {
+        if (!settings) fetchSettings();
+    }, [settings, fetchSettings]);
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -281,11 +287,11 @@ const ProductDetail = () => {
                             </button>
 
                             {/* Shipping Note */}
-                            <div className="bg-white/3 border border-white/5 px-4 py-3">
-                                <p className="text-gray-500 text-[10px] uppercase tracking-widest">
-                                    🚚 Free shipping on orders over Rs. 5,000 · Cash on Delivery available
-                                </p>
-                            </div>
+                                <div className="p-4 bg-white/5 border border-white/10 text-xs text-gray-400 space-y-2">
+                                    <p className="flex items-center gap-2">
+                                        🚚 Free shipping on orders over Rs. {(settings?.freeShippingThreshold || 5000).toLocaleString()} · Cash on Delivery available
+                                    </p>
+                                </div>
                         </div>
 
                         {/* Product Features */}

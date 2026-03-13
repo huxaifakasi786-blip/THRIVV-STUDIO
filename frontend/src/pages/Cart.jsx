@@ -2,16 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Trash2, Minus, Plus, ArrowRight, ShoppingBag } from 'lucide-react';
 import useCartStore from '../store/cartStore';
+import useSettingsStore from '../store/settingsStore';
 import SEO from '../components/common/SEO';
 
 const formatPrice = (price) => `Rs. ${Number(price).toLocaleString('en-PK')}`;
 
 const Cart = () => {
     const { items, updateQuantity, removeItem, getCartTotal } = useCartStore();
+    const { settings, fetchSettings } = useSettingsStore();
+
+    React.useEffect(() => {
+        if (!settings) fetchSettings();
+    }, [settings, fetchSettings]);
 
     const subtotal = getCartTotal();
-    const SHIPPING = 300;
-    const freeShippingThreshold = 5000;
+    const SHIPPING = settings?.shippingFee || 300;
+    const freeShippingThreshold = settings?.freeShippingThreshold || 5000;
     const shipping = subtotal >= freeShippingThreshold ? 0 : (items.length > 0 ? SHIPPING : 0);
     const total = subtotal + shipping;
     const progressToFreeShipping = Math.min((subtotal / freeShippingThreshold) * 100, 100);

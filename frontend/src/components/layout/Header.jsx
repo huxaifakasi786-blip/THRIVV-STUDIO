@@ -52,7 +52,7 @@ const Header = () => {
             {/* Announcement Bar */}
             <div className="announcement-bar fixed top-0 left-0 right-0 z-50">
                 <marquee behavior="scroll" direction="left" scrollamount="4">
-                    &nbsp;&nbsp;&nbsp;FREE SHIPPING ON ORDERS OVER RS. 5,000 &nbsp;•&nbsp; NEW DROP: VORTEX COLLECTION &nbsp;•&nbsp; COD AVAILABLE ACROSS PAKISTAN &nbsp;•&nbsp; FREE SHIPPING ON ORDERS OVER RS. 5,000 &nbsp;•&nbsp; NEW DROP: VORTEX COLLECTION &nbsp;•&nbsp; COD AVAILABLE ACROSS PAKISTAN &nbsp;•&nbsp;
+                    &nbsp;&nbsp;&nbsp;FREE SHIPPING ON ORDERS OVER RS. {(settings?.freeShippingThreshold || 5000).toLocaleString()} &nbsp;•&nbsp; NEW DROP: VORTEX COLLECTION &nbsp;•&nbsp; COD AVAILABLE ACROSS PAKISTAN &nbsp;•&nbsp; FREE SHIPPING ON ORDERS OVER RS. {(settings?.freeShippingThreshold || 5000).toLocaleString()} &nbsp;•&nbsp; NEW DROP: VORTEX COLLECTION &nbsp;•&nbsp; COD AVAILABLE ACROSS PAKISTAN &nbsp;•&nbsp;
                 </marquee>
             </div>
 
