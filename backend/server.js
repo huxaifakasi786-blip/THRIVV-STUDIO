@@ -31,17 +31,18 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Middleware
+// Middleware
 const allowedOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'http://localhost:5174',
     'http://127.0.0.1:5174',
-    'https://thrivv-frontend.vercel.app', // Update with actual Vercel URL
+    'https://thrivv-studio.vercel.app', // Update with your actual Vercel URL
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -77,14 +78,6 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB limit
 
-// @desc    Upload an image file
-// @route   POST /api/upload
-// @access  Public (Admin Panel)
-app.post('/api/upload', upload.single('image'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ message: 'No file uploaded' });
-    }
-    const fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
 // Health check (important for Koyeb)
 app.get('/api/health', (req, res) => {
     res.json({ 
@@ -94,7 +87,20 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-res.json({ url: fileUrl, filename: req.file.filename });
+// @desc    Upload an image file
+// @route   POST /api/upload
+// @access  Public (Admin Panel)
+app.post('/api/upload', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+    
+    // Use the request host to build the file URL dynamically
+    const protocol = req.protocol;
+    const host = req.get('host');
+    const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+
+    res.json({ url: fileUrl, filename: req.file.filename });
 });
 
 // API Routes
