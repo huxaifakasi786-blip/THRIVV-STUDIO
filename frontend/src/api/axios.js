@@ -15,7 +15,7 @@ API.interceptors.response.use(
         // Handle common errors like 401 Unauthorized
         if (error.response?.status === 401) {
             // Silently handle profile checks to avoid console noise when not logged in
-            if (!error.config.url.includes('/api/auth/profile')) {
+            if (!error.config.url.includes('/auth/profile')) {
                 console.warn('Unauthorized access - potential session expiry');
             }
         }
