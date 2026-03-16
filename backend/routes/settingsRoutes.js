@@ -19,16 +19,22 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @desc Update site settings
-// @route PUT /api/settings
-// @access Private/Admin
+// @desc    Update site settings
+// @route   PUT /api/settings
 // @access  Private/Admin
 router.put('/', protect, async (req, res) => {
     try {
-        const settings = await Settings.findOneAndUpdate({}, req.body, { new: true, upsert: true });
+        console.log("Updating settings with data:", req.body);
+        const settings = await Settings.findOneAndUpdate(
+            {}, 
+            { ...req.body }, 
+            { new: true, upsert: true, runValidators: true }
+        );
+        console.log("Settings updated successfully");
         res.json(settings);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        console.error("Settings update error:", error);
+        res.status(400).json({ message: error.message });
     }
 });
 

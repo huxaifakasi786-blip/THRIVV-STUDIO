@@ -1,0 +1,66 @@
+/* ==============================
+   MOBILE OPTIMIZATIONS - THRIVV STUDIO
+   ============================== */
+
+@media (max-width: 768px) {
+  /* Touch target optimizations */
+  button, 
+  a {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Responsive typography */
+  .hero-title {
+    font-size: clamp(2rem, 15vw, 4rem) !important;
+  }
+
+  .section-title {
+    font-size: 2.5rem !important;
+  }
+
+  /* Logo sizing on mobile */
+  .logo-img {
+    height: 32px !important;
+  }
+
+  /* Sticky header mobile adjustments */
+  header.scrolled-mobile {
+    padding: 0.5rem 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Cart badge mobile */
+  .cart-badge {
+    top: -5px;
+    right: -5px;
+    font-size: 8px;
+    height: 14px;
+    width: 14px;
+  }
+}
+
+/* Smooth sticky header animation */
+.header-transition {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.header-up {
+  transform: translateY(-100%);
+}
+
+.header-down {
+  transform: translateY(0);
+}
+
+.logo-container img {
+  max-width: 180px;
+  max-height: 50px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}

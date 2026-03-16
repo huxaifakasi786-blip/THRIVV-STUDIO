@@ -4,6 +4,7 @@ import { ShoppingCart, Menu, X } from 'lucide-react';
 import useCartStore from '../../store/cartStore';
 import useProductStore from '../../store/productStore';
 import useSettingsStore from '../../store/settingsStore';
+import MobileMenu from './MobileMenu';
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -22,11 +23,28 @@ const Header = () => {
         fetchCategories();
     }, [fetchCategories]);
 
+    const [isVisible, setIsVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
+
     useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 10);
-        window.addEventListener('scroll', handleScroll);
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            setIsScrolled(currentScrollY > 10);
+            
+            if (currentScrollY > 100) {
+                if (currentScrollY > lastScrollY) {
+                    setIsVisible(false); // Scrolling down
+                } else {
+                    setIsVisible(true); // Scrolling up
+                }
+            } else {
+                setIsVisible(true);
+            }
+            setLastScrollY(currentScrollY);
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, [lastScrollY]);
 
     // Close mobile menu on route change
     useEffect(() => {
@@ -58,18 +76,20 @@ const Header = () => {
 
             {/* Main Header */}
             <header
-                className={`fixed left-0 right-0 z-40 transition-all duration-300 ${isScrolled
-                    ? 'top-8 bg-black/95 backdrop-blur-md border-b border-white/5'
+                className={`fixed left-0 right-0 z-40 transition-all duration-500 ease-in-out ${
+                    isVisible ? 'translate-y-0' : '-translate-y-full'
+                } ${isScrolled
+                    ? 'top-8 bg-black/95 backdrop-blur-md border-b border-white/5 shadow-2xl'
                     : 'top-8 bg-transparent border-b border-white/0'
-                    }`}
+                }`}
             >
                 <div className="container mx-auto px-4 sm:px-6">
                     <div className="flex items-center justify-between h-16">
 
                         {/* Logo */}
-                        <Link to="/" className="flex-shrink-0 group">
+                        <Link to="/" className="flex-shrink-0 group logo-container">
                             {settings?.logoUrl ? (
-                                <img src={settings.logoUrl} alt="Logo" className="h-10 w-auto object-contain" />
+                                <img src={settings.logoUrl} alt="Logo" className="logo-img transition-transform duration-300 group-hover:scale-105" />
                             ) : (
                                 <div className="flex items-baseline gap-0.5">
                                     <span
@@ -134,42 +154,15 @@ const Header = () => {
                 </div>
             </header>
 
-            {/* Mobile Menu */}
-            <div
-                className={`fixed inset-x-0 z-30 md:hidden transition-all duration-500 ease-in-out ${isMobileMenuOpen ? 'translate-y-0 opacity-100 visible' : '-translate-y-10 opacity-0 invisible'}`}
-                style={{ top: isScrolled ? '104px' : '104px', maxHeight: 'calc(100vh - 104px)', overflowY: 'auto' }}
-            >
-                {/* Backdrop */}
-                <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" onClick={() => setIsMobileMenuOpen(false)}></div>
-
-                {/* Menu Content */}
-                <div className="relative bg-black/50 border-t border-white/5 px-6 py-10">
-                    <nav className="flex flex-col gap-4">
-                        {navLinks.map((link, idx) => (
-                            <Link
-                                key={link.name}
-                                to={link.path}
-                                className={`text-4xl font-black uppercase tracking-tight transition-all duration-300 ${isActive(link.path) ? 'text-[var(--color-accent)]' : 'text-white hover:text-gray-400'
-                                    }`}
-                                style={{
-                                    fontFamily: 'Oswald, sans-serif',
-                                    transitionDelay: `${idx * 50}ms`,
-                                    transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(-20px)'
-                                }}
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
-                    </nav>
-
-                    <div className="mt-8 pt-8 border-t border-white/10 flex items-center gap-6">
-                        <Link to="/cart" className="text-gray-400 hover:text-white text-xs uppercase tracking-widest font-bold flex items-center gap-2">
-                            <ShoppingCart size={16} />
-                            Cart ({cartItemCount})
-                        </Link>
-                    </div>
-                </div>
-            </div>
+            {/* Mobile Menu Component */}
+            <MobileMenu 
+                isOpen={isMobileMenuOpen} 
+                onClose={() => setIsMobileMenuOpen(false)} 
+                navLinks={navLinks}
+                settings={settings}
+                cartItemCount={cartItemCount}
+                isActive={isActive}
+            />
         </>
     );
 };

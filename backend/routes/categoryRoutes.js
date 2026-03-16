@@ -16,17 +16,19 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @desc    Create a category (Admin only later)
+// @desc    Create a category (Admin only)
 // @route   POST /api/categories
-// @access  Private/Admin
 // @access  Private/Admin
 router.post('/', protect, async (req, res) => {
     try {
+        console.log("Creating new category with data:", req.body);
         const { name, slug, image, description } = req.body;
         const category = new Category({ name, slug, image, description });
         const createdCategory = await category.save();
+        console.log("Category created successfully:", createdCategory._id);
         res.status(201).json(createdCategory);
     } catch (error) {
+        console.error("Category creation error:", error);
         res.status(400).json({ message: error.message });
     }
 });

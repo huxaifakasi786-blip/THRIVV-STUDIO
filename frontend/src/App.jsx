@@ -23,6 +23,7 @@ import ProductForm from './pages/admin/ProductForm';
 import CategoriesManagement from './pages/admin/CategoriesManagement';
 import OrdersManagement from './pages/admin/OrdersManagement';
 import Inventory from './pages/admin/Inventory';
+import HomepageManager from './pages/admin/HomepageManager';
 
 import { useEffect } from 'react';
 import useAuthStore from './store/authStore';
@@ -67,6 +68,7 @@ function App() {
           <Route path="categories" element={<CategoriesManagement />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="orders" element={<OrdersManagement />} />
+          <Route path="homepage" element={<HomepageManager />} />
         </Route>
       </Routes>
     </Router>

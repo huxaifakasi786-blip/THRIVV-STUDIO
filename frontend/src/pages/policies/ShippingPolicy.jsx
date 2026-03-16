@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useSettingsStore from '../../store/settingsStore';
 
 const PolicyLayout = ({ title, lastUpdated, children }) => (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 max-w-4xl">
@@ -24,6 +25,15 @@ const PolicyLayout = ({ title, lastUpdated, children }) => (
 );
 
 const ShippingPolicy = () => {
+    const { settings, fetchSettings } = useSettingsStore();
+
+    React.useEffect(() => {
+        if (!settings) fetchSettings();
+    }, [settings, fetchSettings]);
+
+    const shippingFee = settings?.shippingFee || 300;
+    const freeThreshold = settings?.freeShippingThreshold || 5000;
+
     return (
         <PolicyLayout title="Shipping Policy" lastUpdated="March 2024">
             <section>
@@ -51,7 +61,7 @@ const ShippingPolicy = () => {
                             <tr className="hover:bg-white/5 transition-colors">
                                 <td className="px-6 py-4 font-bold text-white">Standard Shipping</td>
                                 <td className="px-6 py-4">3-5 Business Days</td>
-                                <td className="px-6 py-4 text-right">Rs. 300 (Free over Rs. 5,000)</td>
+                                <td className="px-6 py-4 text-right">Rs. {shippingFee} (Free over Rs. {freeThreshold.toLocaleString()})</td>
                             </tr>
                             <tr className="hover:bg-white/5 transition-colors">
                                 <td className="px-6 py-4 font-bold text-white">Express Shipping</td>
@@ -61,7 +71,7 @@ const ShippingPolicy = () => {
                             <tr className="hover:bg-white/5 transition-colors">
                                 <td className="px-6 py-4 font-bold text-[var(--color-accent)]">Cash on Delivery (COD)</td>
                                 <td className="px-6 py-4">3-5 Business Days</td>
-                                <td className="px-6 py-4 text-right">Rs. 300 Flat Rate</td>
+                                <td className="px-6 py-4 text-right">Rs. {shippingFee} Flat Rate</td>
                             </tr>
                         </tbody>
                     </table>

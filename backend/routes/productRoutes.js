@@ -43,16 +43,18 @@ router.get('/:idOrSlug', async (req, res) => {
     }
 });
 
-// @desc    Create a product (Admin only later)
+// @desc    Create a product (Admin only)
 // @route   POST /api/products
-// @access  Private/Admin
 // @access  Private/Admin
 router.post('/', protect, async (req, res) => {
     try {
+        console.log("Creating new product with data:", req.body);
         const product = new Product(req.body);
         const createdProduct = await product.save();
+        console.log("Product created successfully:", createdProduct._id);
         res.status(201).json(createdProduct);
     } catch (error) {
+        console.error("Product creation error:", error);
         if (error.name === 'ValidationError') {
             const messages = Object.values(error.errors).map(val => val.message);
             return res.status(400).json({ message: messages.join(', ') });

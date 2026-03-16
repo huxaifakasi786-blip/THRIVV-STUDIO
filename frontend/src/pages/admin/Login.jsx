@@ -72,7 +72,7 @@ const AdminLogin = () => {
                 </form>
 
                 <div className="mt-8 text-center text-xs text-gray-600">
-                    Demo Credentials: admin / admin123
+                    WEKCOME admin and admin123
                 </div>
 
             </div>

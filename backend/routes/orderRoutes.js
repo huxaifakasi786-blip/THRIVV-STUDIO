@@ -41,30 +41,39 @@ router.post('/', async (req, res) => {
 
         // Now perform decrements
         for (const item of orderItems) {
-            await Product.findOneAndUpdate(
+            const updateResult = await Product.findOneAndUpdate(
                 { _id: item.product, "variants.size": item.size },
-                { $inc: { "variants.$.stock": -item.quantity } }
+                { $inc: { "variants.$.stock": -item.quantity } },
+                { new: true }
             );
+            if (!updateResult) {
+                console.error(`Failed to update stock for product ${item.product} size ${item.size}`);
+            }
         }
         
+        console.log("Saving order to database...");
         const createdOrder = await order.save();
+        console.log("Order saved successfully:", createdOrder._id);
         res.status(201).json(createdOrder);
 
     } catch (error) {
-        console.error("Order creation error:", error);
-        res.status(500).json({ message: 'Failed to create order: ' + error.message });
+        console.error("CRITICAL Order creation error:", error);
+        res.status(500).json({ 
+            message: 'Failed to create order: ' + error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 });
 
-// @desc    Get all orders (Admin only later)
+// @desc    Get all orders (Admin only)
 // @route   GET /api/orders
-// @access  Private/Admin
 // @access  Private/Admin
 router.get('/', protect, async (req, res) => {
     try {
         const orders = await Order.find({}).sort({ createdAt: -1 });
         res.json(orders);
     } catch (error) {
+        console.error("Error fetching orders:", error);
         res.status(500).json({ message: error.message });
     }
 });

@@ -14,6 +14,7 @@ import categoryRoutes from './routes/categoryRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import homepageRoutes from './routes/homepageRoutes.js';
 
 dotenv.config();
 
@@ -30,15 +31,22 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Middleware
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:5174',
+    'http://127.0.0.1:5174',
+    'https://thrivv-frontend.vercel.app', // Update with actual Vercel URL
+];
+
 app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'http://localhost:5174',
-        'http://127.0.0.1:5174',
-        'http://localhost:5175',
-        'http://127.0.0.1:5175',
-    ],
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 app.use(express.json());
@@ -77,7 +85,16 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
         return res.status(400).json({ message: 'No file uploaded' });
     }
     const fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
-    res.json({ url: fileUrl, filename: req.file.filename });
+// Health check (important for Koyeb)
+app.get('/api/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        message: 'Backend running',
+        timestamp: new Date().toISOString()
+    });
+});
+
+res.json({ url: fileUrl, filename: req.file.filename });
 });
 
 // API Routes
@@ -97,7 +114,26 @@ app.get('/', (req, res) => {
     res.send('THRIVV STUDIO Backend API is running...');
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Final error handler:', err);
+    res.status(500).json({ message: err.message || 'Internal Server Error' });
+});
+
 // Start Server
-app.listen(PORT, () => {
-    console.log(`🚀 Server is running on http://localhost:${PORT}`);
+const HOST = '0.0.0.0';
+const server = app.listen(PORT, HOST, () => {
+    console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err, promise) => {
+    console.error(`Error: ${err.message}`);
+    // Close server & exit process
+    // server.close(() => process.exit(1));
+});
+
+process.on('uncaughtException', (err) => {
+    console.error(`Uncaught Exception: ${err.message}`);
+    // server.close(() => process.exit(1));
 });

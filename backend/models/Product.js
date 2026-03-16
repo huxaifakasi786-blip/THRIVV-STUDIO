@@ -64,11 +64,17 @@ const productSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Middleware to calculate total stock
-productSchema.pre('save', async function () {
+// Middleware to calculate total stock and generate slug
+productSchema.pre('save', async function (next) {
     if (this.variants && this.variants.length > 0) {
         this.totalStock = this.variants.reduce((total, variant) => total + variant.stock, 0);
     }
+    
+    // Generate slug from name if not present
+    if (this.isModified('name') || !this.slug) {
+        this.slug = this.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    }
+    next();
 });
 
 const Product = mongoose.model('Product', productSchema);
