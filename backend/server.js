@@ -95,10 +95,9 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
         return res.status(400).json({ message: 'No file uploaded' });
     }
     
-    // Use the request host to build the file URL dynamically
-    const protocol = req.protocol;
-    const host = req.get('host');
-    const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+    // Use BACKEND_URL from env if available, otherwise build from request
+    const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+    const fileUrl = `${baseUrl}/uploads/${req.file.filename}`;
 
     res.json({ url: fileUrl, filename: req.file.filename });
 });

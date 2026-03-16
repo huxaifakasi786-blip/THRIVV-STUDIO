@@ -70,7 +70,9 @@ router.post('/', async (req, res) => {
 // @access  Private/Admin
 router.get('/', protect, async (req, res) => {
     try {
-        const orders = await Order.find({}).sort({ createdAt: -1 });
+        const orders = await Order.find({})
+            .populate('orderItems.product', 'name images')
+            .sort({ createdAt: -1 });
         res.json(orders);
     } catch (error) {
         console.error("Error fetching orders:", error);

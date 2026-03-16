@@ -26,6 +26,16 @@ const categorySchema = new mongoose.Schema({
     timestamps: true
 });
 
+// Middleware to generate slug before saving
+categorySchema.pre('save', function (next) {
+    if (this.isModified('name') || !this.slug) {
+        this.slug = this.name.toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '');
+    }
+    next();
+});
+
 const Category = mongoose.model('Category', categorySchema);
 
 export default Category;
